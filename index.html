@@ -130,8 +130,9 @@
     font-size: 14px;
   }
 
-  .interval-row{ align-items:center; }
-  .interval-row label{ font-size: 13px; color: var(--ink-dim); white-space:nowrap; }
+  .time-row{ align-items:center; }
+  .time-row label{ font-size: 13px; color: var(--ink-dim); white-space:nowrap; }
+  .time-row select{ flex:1; text-align:center; }
   input[type=number]{ width: 70px; }
 
   button.add-btn{
@@ -406,12 +407,14 @@
     <div class="row">
       <textarea id="taskDetails" placeholder="تفاصيل أخرى (اختياري)... أي ملاحظات إضافية"></textarea>
     </div>
-    <div class="row interval-row">
-      <label>ذكّرني كل</label>
-      <input type="number" id="intervalValue" min="1" value="30">
-      <select id="intervalUnit">
-        <option value="1">دقيقة</option>
-        <option value="60" selected>ساعة</option>
+    <div class="row time-row">
+      <label>ذكّرني الساعة</label>
+      <select id="timeHour"></select>
+      <label>:</label>
+      <select id="timeMinute"></select>
+      <select id="timePeriod">
+        <option value="ص">صباحاً</option>
+        <option value="م">مساءً</option>
       </select>
     </div>
     <button type="submit" class="add-btn">+ إضافة مهمة</button>
@@ -597,7 +600,7 @@ function renderTasks(){
           ${clientLine}
           ${phoneLine}
           ${notesLine}
-          <div class="task-meta">${isDue ? '🔴 حان وقتها' : fmtRemaining(remaining)} — كل ${t.intervalLabel}</div>
+          <div class="task-meta">${isDue ? '🔴 حان وقتها' : fmtRemaining(remaining)} — يومياً الساعة ${t.timeLabel}</div>
         </div>
         <div class="task-actions">
           <div class="icon-btn done" onclick="markDone('${t.id}')" title="تم">✓</div>
@@ -614,6 +617,41 @@ function escapeHtml(s){
   return d.innerHTML;
 }
 
+// ---------- time picker ----------
+function populateTimeDropdowns(){
+  const hourSel = document.getElementById('timeHour');
+  const minSel = document.getElementById('timeMinute');
+  for(let h = 1; h <= 12; h++){
+    const opt = document.createElement('option');
+    opt.value = h;
+    opt.textContent = h;
+    if(h === 9) opt.selected = true;
+    hourSel.appendChild(opt);
+  }
+  for(let m = 0; m < 60; m += 5){
+    const opt = document.createElement('option');
+    opt.value = m;
+    opt.textContent = String(m).padStart(2, '0');
+    minSel.appendChild(opt);
+  }
+}
+
+// Given 12-hour clock inputs, compute the next timestamp this occurs at (today if still ahead, else tomorrow)
+function nextOccurrence(hour12, minute, period){
+  let hour24 = hour12 % 12;
+  if(period === 'م') hour24 += 12;
+  const now = new Date();
+  const candidate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hour24, minute, 0, 0);
+  if(candidate.getTime() <= now.getTime()){
+    candidate.setDate(candidate.getDate() + 1);
+  }
+  return candidate.getTime();
+}
+
+function formatTimeLabel(hour12, minute, period){
+  return `${hour12}:${String(minute).padStart(2,'0')} ${period === 'ص' ? 'صباحاً' : 'مساءً'}`;
+}
+
 // ---------- task actions ----------
 document.getElementById('taskForm').addEventListener('submit', async (e) => {
   e.preventDefault();
@@ -621,12 +659,10 @@ document.getElementById('taskForm').addEventListener('submit', async (e) => {
   const clientName = document.getElementById('clientName').value.trim();
   const clientPhone = document.getElementById('clientPhone').value.trim();
   const details = document.getElementById('taskDetails').value.trim();
-  const val = parseInt(document.getElementById('intervalValue').value, 10);
-  const unit = parseInt(document.getElementById('intervalUnit').value, 10);
-  if(!title || !val || val <= 0) return;
-
-  const intervalMs = val * unit * 60000;
-  const unitLabel = unit === 60 ? (val === 1 ? 'ساعة' : `${val} ساعة`) : (val === 1 ? 'دقيقة' : `${val} دقيقة`);
+  const hour12 = parseInt(document.getElementById('timeHour').value, 10);
+  const minute = parseInt(document.getElementById('timeMinute').value, 10);
+  const period = document.getElementById('timePeriod').value;
+  if(!title || !hour12) return;
 
   tasks.push({
     id: 'task_' + Date.now() + '_' + Math.random().toString(36).slice(2,7),
@@ -635,9 +671,11 @@ document.getElementById('taskForm').addEventListener('submit', async (e) => {
     clientPhone: clientPhone || null,
     details: details || null,
     photoData: currentPhotoData,
-    intervalMs,
-    intervalLabel: unitLabel,
-    nextDue: Date.now() + intervalMs
+    hour12,
+    minute,
+    period,
+    timeLabel: formatTimeLabel(hour12, minute, period),
+    nextDue: nextOccurrence(hour12, minute, period)
   });
 
   document.getElementById('taskTitle').value = '';
@@ -652,7 +690,7 @@ document.getElementById('taskForm').addEventListener('submit', async (e) => {
 async function markDone(id){
   const t = tasks.find(x => x.id === id);
   if(t){
-    t.nextDue = Date.now() + t.intervalMs;
+    t.nextDue = nextOccurrence(t.hour12, t.minute, t.period);
     await saveTasks();
     renderTasks();
   }
@@ -669,10 +707,10 @@ function testAlertNow(){
   if('Notification' in window && Notification.permission === 'default'){
     Notification.requestPermission().then(() => {
       updateNotifStatusUI();
-      triggerAlert({ id: 'test', title: 'هذا تنبيه تجريبي', clientName: null, clientPhone: null, details: 'إذا سمعت صوت واهتز الموبايل ووصلك إشعار، التنبيه شغال تمام ✓', intervalMs: 0 });
+      triggerAlert({ id: 'test', title: 'هذا تنبيه تجريبي', clientName: null, clientPhone: null, details: 'إذا سمعت صوت واهتز الموبايل ووصلك إشعار، التنبيه شغال تمام ✓' });
     });
   }else{
-    triggerAlert({ id: 'test', title: 'هذا تنبيه تجريبي', clientName: null, clientPhone: null, details: 'إذا سمعت صوت واهتز الموبايل ووصلك إشعار، التنبيه شغال تمام ✓', intervalMs: 0 });
+    triggerAlert({ id: 'test', title: 'هذا تنبيه تجريبي', clientName: null, clientPhone: null, details: 'إذا سمعت صوت واهتز الموبايل ووصلك إشعار، التنبيه شغال تمام ✓' });
   }
 }
 
@@ -729,7 +767,7 @@ async function dismissAlert(){
   document.getElementById('overlay').classList.remove('show');
   if(activeAlertTask){
     const t = tasks.find(x => x.id === activeAlertTask.id);
-    if(t) t.nextDue = Date.now() + t.intervalMs;
+    if(t) t.nextDue = nextOccurrence(t.hour12, t.minute, t.period);
     await saveTasks();
     renderTasks();
   }
@@ -759,6 +797,7 @@ function checkDueTasks(){
 }
 
 setInterval(checkDueTasks, 1000);
+populateTimeDropdowns();
 loadTasks();
 updateNotifStatusUI();
 </script>
