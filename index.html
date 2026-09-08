@@ -66,7 +66,7 @@
   }
 
   h1{
-    font-size: 20px;
+    font-size: 29px;
     font-weight: 900;
     margin:0;
     letter-spacing: 0.2px;
@@ -74,7 +74,8 @@
 
   .status-pill{
     font-family:'IBM Plex Mono', monospace;
-    font-size: 11px;
+    font-size: 15px;
+    font-weight: 700;
     color: var(--ink-dim);
     border:1px solid var(--line);
     padding: 5px 10px;
@@ -89,10 +90,11 @@
     background: var(--bg-soft);
     border: 1px dashed var(--line);
     border-radius: 12px;
-    padding: 12px 14px;
-    font-size: 13px;
-    color: var(--ink-dim);
-    line-height: 1.7;
+    padding: 16px 18px;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.8;
     margin-bottom: 20px;
   }
   .notice b{ color: var(--amber); }
@@ -116,7 +118,8 @@
     padding: 12px 14px;
     color: var(--ink);
     font-family:'Tajawal', sans-serif;
-    font-size: 15px;
+    font-size: 20px;
+    font-weight: 600;
   }
   input[type=text]:focus{ outline: 2px solid var(--amber); outline-offset:1px; }
 
@@ -127,11 +130,12 @@
     padding: 10px 12px;
     color: var(--ink);
     font-family:'Tajawal', sans-serif;
-    font-size: 14px;
+    font-size: 18px;
+    font-weight: 600;
   }
 
   .time-row{ align-items:center; }
-  .time-row label{ font-size: 13px; color: var(--ink-dim); white-space:nowrap; }
+  .time-row label{ font-size: 17px; font-weight: 600; color: var(--ink); white-space:nowrap; }
   .time-row select{ flex:1; text-align:center; }
   input[type=number]{ width: 70px; }
 
@@ -142,35 +146,157 @@
     color: #1A1305;
     border:none;
     border-radius: 10px;
-    padding: 13px;
+    padding: 15px;
     font-family:'Tajawal', sans-serif;
-    font-weight: 700;
-    font-size: 15px;
+    font-weight: 800;
+    font-size: 20px;
     cursor:pointer;
   }
   button.add-btn:active{ transform: scale(0.98); }
 
   .section-label{
     font-family:'IBM Plex Mono', monospace;
-    font-size: 11px;
+    font-size: 15px;
+    font-weight: 700;
     color: var(--ink-dim);
     letter-spacing: 1px;
     margin: 0 4px 10px;
   }
 
-  .field-label{ font-size:12px; color: var(--ink-dim); margin: 2px 4px 6px; }
+  /* ---------- client slider ---------- */
+  .client-slider-wrap{
+    position: relative;
+    direction: ltr; /* left/right math stays simple; content inside is still RTL per-element */
+  }
+  .client-slider{
+    overflow: hidden;
+    border-radius: 16px;
+  }
+  .client-slide-track{
+    display:flex;
+    transition: transform 0.35s ease;
+  }
+  .client-slide{
+    min-width: 100%;
+    box-sizing: border-box;
+    padding: 2px;
+  }
+  .slider-nav{
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(20,24,31,0.75);
+    border: 1px solid var(--line);
+    color: var(--ink);
+    width: 40px; height:40px;
+    border-radius: 50%;
+    font-size: 22px;
+    cursor:pointer;
+    z-index: 5;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .slider-nav:disabled{ opacity: 0.25; cursor:default; }
+  .slider-nav.prev{ right: -4px; }
+  .slider-nav.next{ left: -4px; }
+
+  .client-dots{
+    display:flex;
+    justify-content:center;
+    gap: 8px;
+    margin: 14px 0 20px;
+    flex-wrap: wrap;
+  }
+  .client-dot{
+    width: 10px; height:10px;
+    border-radius:50%;
+    background: var(--line);
+    cursor:pointer;
+    border: none;
+    padding:0;
+  }
+  .client-dot.active{ background: var(--amber); width:22px; border-radius:6px; }
+  .client-dot.has-due{ background: var(--danger); }
+
+  .client-card{
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 18px;
+    direction: rtl; /* back to normal RTL for the actual content */
+  }
+  .client-card.due{ border-color: var(--danger); }
+
+  .client-card-head{
+    display:flex;
+    align-items:center;
+    gap: 14px;
+    padding-bottom: 14px;
+    margin-bottom: 14px;
+    border-bottom: 1px dashed var(--line);
+  }
+  .client-card-avatar{
+    width: 64px; height:64px;
+    border-radius: 16px;
+    object-fit:cover;
+    border: 1px solid var(--line);
+    flex-shrink:0;
+    cursor:pointer;
+  }
+  .client-card-avatar.placeholder{
+    display:flex; align-items:center; justify-content:center;
+    background: var(--bg);
+    color: var(--ink-dim);
+    font-size: 26px;
+  }
+  .client-card-name{
+    font-size: 22px;
+    font-weight: 800;
+    margin-bottom: 4px;
+  }
+  .client-card-name.no-client{ color: var(--ink-dim); font-weight:700; }
+  .client-card-contacts{
+    display:flex;
+    flex-wrap:wrap;
+    gap: 10px 16px;
+  }
+
+  .client-task-count{
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--ink-dim);
+    margin-bottom: 10px;
+  }
+
+  .ct-row{
+    background: var(--bg-soft);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+  }
+  .ct-row.due{ border-color: var(--danger); background: linear-gradient(135deg, #2A1B18, var(--bg-soft)); }
+  .ct-row-top{
+    display:flex;
+    align-items:flex-start;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .ct-title{ font-weight:800; font-size:17px; }
+  .ct-actions{ display:flex; gap:6px; flex-shrink:0; }
+
+  .field-label{ font-size:17px; color: var(--ink); margin: 2px 4px 6px; }
 
   .photo-row{
     align-items:center;
-    margin-bottom: 12px;
+    margin-bottom: 14px;
   }
   .photo-picker{
-    width: 56px; height:56px;
-    border-radius: 50%;
+    width: 120px; height:120px;
+    border-radius: 18px;
     background: var(--bg);
-    border: 1px dashed var(--line);
+    border: 2px dashed var(--line);
     display:flex; align-items:center; justify-content:center;
-    font-size: 20px;
+    font-size: 36px;
     color: var(--ink-dim);
     cursor:pointer;
     flex-shrink:0;
@@ -183,12 +309,39 @@
   .photo-picker input[type=file]{
     position:absolute; inset:0; opacity:0; cursor:pointer;
   }
+  .photo-picker .zoom-hint{
+    position:absolute;
+    bottom: 4px; left:4px; right:4px;
+    background: rgba(0,0,0,0.55);
+    color:#fff;
+    font-size: 11px;
+    text-align:center;
+    padding: 3px 0;
+    border-radius: 6px;
+    pointer-events:none;
+  }
+  .zoom-btn{
+    position:absolute;
+    bottom: 6px; left:6px;
+    width: 32px; height:32px;
+    border-radius:50%;
+    background: rgba(0,0,0,0.6);
+    border: 1px solid rgba(255,255,255,0.4);
+    color:#fff;
+    font-size: 15px;
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer;
+    z-index: 2;
+  }
   .photo-picker-label{
-    font-size: 12px;
-    color: var(--ink-dim);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 6px;
   }
   .photo-clear{
-    font-size: 11px;
+    font-size: 16px;
+    font-weight: 700;
     color: var(--danger);
     cursor:pointer;
     background:none; border:none;
@@ -227,11 +380,31 @@
   }
 
   .task-main{ flex:1; min-width:0; }
-  .task-title{ font-weight:700; font-size:15px; margin-bottom:4px; }
-  .task-meta{ font-family:'IBM Plex Mono', monospace; font-size:11px; color: var(--ink-dim); margin-bottom:3px; }
+  .task-title{ font-weight:800; font-size:21px; margin-bottom:5px; }
+  .task-meta{ font-family:'IBM Plex Mono', monospace; font-size:15px; font-weight:700; color: var(--ink-dim); margin-bottom:4px; }
   .task.due .task-meta{ color: var(--danger); }
-  .task-contact{
+
+  .alarm-link{
+    display:inline-flex;
+    align-items:center;
+    gap:5px;
+    font-size: 13px;
+    font-weight:700;
+    color: var(--amber);
+    background: var(--amber-dim);
+    text-decoration:none;
+    padding: 5px 10px;
+    border-radius: 20px;
+    margin-top: 4px;
+  }
+  .alarm-note{
     font-size: 12px;
+    color: var(--ink-dim);
+    margin-top: 4px;
+  }
+  .task-contact{
+    font-size: 18px;
+    font-weight: 700;
     color: var(--teal);
     text-decoration:none;
     display:inline-flex;
@@ -246,15 +419,15 @@
     padding: 12px 14px;
     color: var(--ink);
     font-family:'Tajawal', sans-serif;
-    font-size: 14px;
+    font-size: 18px;
     resize: vertical;
     min-height: 60px;
   }
   textarea:focus{ outline: 2px solid var(--amber); outline-offset:1px; }
 
   .task-notes{
-    font-size: 12px;
-    color: var(--ink-dim);
+    font-size: 17px;
+    color: var(--ink);
     background: var(--bg);
     border: 1px solid var(--line);
     border-radius: 8px;
@@ -268,12 +441,12 @@
     width:100%;
     background: var(--bg-soft);
     border: 1px solid var(--line);
-    color: var(--ink-dim);
+    color: var(--ink);
     border-radius: 10px;
-    padding: 11px;
+    padding: 13px;
     font-family:'Tajawal', sans-serif;
     font-weight: 700;
-    font-size: 13px;
+    font-size: 18px;
     cursor:pointer;
     margin-bottom: 16px;
   }
@@ -287,9 +460,10 @@
     background: var(--card);
     border: 1px solid var(--teal);
     color: var(--ink);
-    padding: 10px 18px;
+    padding: 12px 22px;
     border-radius: 30px;
-    font-size: 13px;
+    font-size: 17px;
+    font-weight: 700;
     opacity:0;
     pointer-events:none;
     transition: opacity 0.25s ease, transform 0.25s ease;
@@ -318,12 +492,53 @@
 
   .empty{
     text-align:center;
-    color: var(--ink-dim);
-    font-size: 13px;
+    color: var(--ink);
+    font-size: 18px;
     padding: 30px 10px;
     border: 1px dashed var(--line);
     border-radius: 14px;
   }
+
+  /* Fullscreen image preview viewer */
+  #imgViewer{
+    position: fixed; inset:0;
+    background: rgba(0,0,0,0.92);
+    display:none;
+    align-items:center; justify-content:center;
+    z-index: 998;
+    padding: 20px;
+  }
+  #imgViewer.show{ display:flex; }
+  #imgViewer img{
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    border-radius: 8px;
+  }
+  .img-viewer-close{
+    position: absolute;
+    top: 20px; left: 20px;
+    width: 44px; height:44px;
+    border-radius:50%;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.4);
+    color:#fff;
+    font-size: 18px;
+    cursor:pointer;
+  }
+
+  /* Inline copy-to-clipboard buttons on task fields */
+  .copy-btn{
+    background:none;
+    border:none;
+    color: var(--ink-dim);
+    font-size: 14px;
+    cursor:pointer;
+    padding: 2px 4px;
+    margin-inline-start: 4px;
+    vertical-align:middle;
+  }
+  .copy-btn:active{ transform: scale(0.9); }
 
   /* Full-screen alert overlay */
   #overlay{
@@ -350,15 +565,15 @@
     0%,100%{ transform: scale(1); }
     50%{ transform: scale(1.08); }
   }
-  #overlay h2{ font-size: 22px; margin: 0 0 8px; }
-  #overlay p{ color: var(--ink-dim); font-size: 14px; margin: 0 0 26px; }
+  #overlay h2{ font-size: 30px; margin: 0 0 8px; }
+  #overlay p{ color: var(--ink); font-size: 19px; margin: 0 0 26px; }
   #overlay .btns{ display:flex; gap:10px; }
   #overlay button{
     border:none; border-radius: 10px;
-    padding: 12px 22px;
+    padding: 16px 26px;
     font-family:'Tajawal', sans-serif;
-    font-weight:700;
-    font-size: 14px;
+    font-weight:800;
+    font-size: 19px;
     cursor:pointer;
   }
   #overlay .snooze{ background: var(--bg-soft); color: var(--ink); border:1px solid var(--line); }
@@ -377,12 +592,13 @@
   </header>
 
   <div class="notice" id="notice">
-    يشتغل التذكير طالما الصفحة مفتوحة بالمتصفح. إذا سكرت المتصفح أو الموبايل راقد، ما توصلك تنبيهات — هاي طبيعة صفحات الويب.
-    لأفضل نتيجة: خلي هاي الصفحة مفتوحة وسوي <b>"إضافة إلى الشاشة الرئيسية"</b> من متصفحك حتى تصير مثل تطبيق.
+    خلي هاي الصفحة مفتوحة حتى يوصلك التنبيه. إذا سكرتها، ما راح توصلك تنبيهات.
+    <br><br>نصيحة: سوي <b>"إضافة إلى الشاشة الرئيسية"</b> من المتصفح حتى تصير مثل تطبيق عادي.
+    <br><br>⚠️ ملاحظة: إذا موبايلك بوضع الصامت، صوت المتصفح ما يطلع — هاي قيد من نظام الموبايل نفسه على كل المواقع. للمهام المهمة جداً، أنصحك تسوي وياها منبّه Alarm أصلي بالموبايل كضمان إضافي.
     <br><span id="storageInfo">جارِ التحقق من التخزين...</span>
   </div>
 
-  <button type="button" class="test-btn" onclick="testAlertNow()">🔔 جرّب التنبيه الحين (صوت + اهتزاز + تنبيه)</button>
+  <button type="button" class="test-btn" onclick="testAlertNow()">🔔 جرّب التنبيه الحين</button>
 
   <form id="taskForm">
     <div class="row photo-row">
@@ -390,25 +606,31 @@
         <span id="photoPlaceholder">📷</span>
         <img id="photoPreview" style="display:none;">
         <input type="file" id="photoInput" accept="image/*">
+        <button type="button" class="zoom-btn" id="zoomBtn" style="display:none;" onclick="event.stopPropagation(); openImagePreview(currentPhotoData);">🔍</button>
       </div>
       <div>
-        <div class="photo-picker-label">صورة العميل (اختياري)</div>
+        <div class="photo-picker-label">صورة العميل</div>
         <button type="button" class="photo-clear" id="photoClearBtn" style="display:none;" onclick="clearPhoto()">إزالة الصورة</button>
       </div>
     </div>
 
     <div class="row">
-      <input type="text" id="taskTitle" placeholder="اكتب المهمة... مثلاً: تواصل مع العميل" required>
+      <input type="text" id="taskTitle" placeholder="شنو المهمة؟ مثلاً: اتصل بالعميل" required>
     </div>
     <div class="row">
-      <input type="text" id="clientName" placeholder="اسم العميل (اختياري)">
-      <input type="text" id="clientPhone" placeholder="رقم التلفون (اختياري)" inputmode="tel">
+      <input type="text" id="clientName" placeholder="اسم العميل">
     </div>
     <div class="row">
-      <textarea id="taskDetails" placeholder="تفاصيل أخرى (اختياري)... أي ملاحظات إضافية"></textarea>
+      <input type="text" id="clientPhone" placeholder="رقم الهاتف" inputmode="tel" dir="ltr" style="text-align:left;">
+    </div>
+    <div class="row">
+      <input type="text" id="clientAddress" placeholder="العنوان">
+    </div>
+    <div class="row">
+      <textarea id="taskDetails" placeholder="ملاحظات إضافية (إذا تريد)"></textarea>
     </div>
     <div class="row time-row">
-      <label>ذكّرني الساعة</label>
+      <label>وقت التذكير</label>
       <select id="timeHour"></select>
       <label>:</label>
       <select id="timeMinute"></select>
@@ -417,14 +639,27 @@
         <option value="م">مساءً</option>
       </select>
     </div>
-    <button type="submit" class="add-btn">+ إضافة مهمة</button>
+    <button type="submit" class="add-btn">+ ضيف المهمة</button>
   </form>
 
-  <div class="section-label">مهامك</div>
-  <div id="taskList"></div>
+  <div class="section-label">مهامك حسب الزبون</div>
+
+  <div class="client-slider-wrap">
+    <button type="button" class="slider-nav prev" id="prevClientBtn" aria-label="السابق">‹</button>
+    <div class="client-slider" id="clientSlider">
+      <div class="client-slide-track" id="clientSlideTrack"></div>
+    </div>
+    <button type="button" class="slider-nav next" id="nextClientBtn" aria-label="التالي">›</button>
+  </div>
+  <div class="client-dots" id="clientDots"></div>
 </div>
 
 <div id="toast"></div>
+
+<div id="imgViewer" onclick="closeImagePreview()">
+  <img id="imgViewerPic" onclick="event.stopPropagation()">
+  <button type="button" class="img-viewer-close" onclick="closeImagePreview()">✕</button>
+</div>
 
 <div id="overlay">
   <div class="ring">⏰</div>
@@ -438,9 +673,28 @@
 
 <script>
 let tasks = [];
+const isAndroidDevice = /Android/i.test(navigator.userAgent);
+
+// Builds a link that, on Android + Chrome, opens the phone's real Alarm/Clock app
+// with the time and label pre-filled — the user just taps Save.
+// This uses Android's own public SET_ALARM intent (the same one the Google Assistant
+// and other apps use); it is NOT possible on iOS/Safari, since Apple has no equivalent
+// public API for websites to reach the native Clock app.
+function buildAlarmIntentHref(t){
+  let hour24 = t.hour12 % 12;
+  if(t.period === 'م') hour24 += 12;
+  const msg = encodeURIComponent(t.title);
+  return `intent:#Intent;action=android.intent.action.SET_ALARM;` +
+         `i.android.intent.extra.alarm.HOUR=${hour24};` +
+         `i.android.intent.extra.alarm.MINUTES=${t.minute};` +
+         `S.android.intent.extra.alarm.MESSAGE=${msg};end`;
+}
 let activeAlertTask = null;
 let audioCtx = null;
-let alarmInterval = null;
+let ringTimer = null;
+let vibrateTimer = null;
+let wakeLock = null;
+let ringToneHigh = true;
 let currentPhotoData = null;
 
 // ---------- photo handling ----------
@@ -450,7 +704,7 @@ function resizeImage(file){
     reader.onload = (e) => {
       const img = new Image();
       img.onload = () => {
-        const maxSize = 240;
+        const maxSize = 640;
         let w = img.width, h = img.height;
         if(w > h && w > maxSize){ h = h * (maxSize/w); w = maxSize; }
         else if(h > maxSize){ w = w * (maxSize/h); h = maxSize; }
@@ -477,6 +731,7 @@ document.getElementById('photoInput').addEventListener('change', async (e) => {
     document.getElementById('photoPreview').style.display = 'block';
     document.getElementById('photoPlaceholder').style.display = 'none';
     document.getElementById('photoClearBtn').style.display = 'inline';
+    document.getElementById('zoomBtn').style.display = 'flex';
   }catch(err){
     console.error('تعذرت معالجة الصورة', err);
   }
@@ -488,6 +743,61 @@ function clearPhoto(){
   document.getElementById('photoPreview').style.display = 'none';
   document.getElementById('photoPlaceholder').style.display = 'block';
   document.getElementById('photoClearBtn').style.display = 'none';
+  document.getElementById('zoomBtn').style.display = 'none';
+}
+
+// ---------- fullscreen image preview ----------
+function openImagePreview(src){
+  if(!src) return;
+  document.getElementById('imgViewerPic').src = src;
+  document.getElementById('imgViewer').classList.add('show');
+}
+function openTaskImage(id){
+  const t = tasks.find(x => x.id === id);
+  if(t && t.photoData) openImagePreview(t.photoData);
+}
+function closeImagePreview(){
+  document.getElementById('imgViewer').classList.remove('show');
+}
+
+// ---------- copy any field to clipboard ----------
+function copyText(text, label){
+  if(!text) return;
+  const doCopyFallback = () => {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.focus(); ta.select();
+    try{ document.execCommand('copy'); }catch(e){}
+    document.body.removeChild(ta);
+  };
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(() => {
+      showToast(`✓ انسخ${label ? ' ' + label : ''}`, false);
+    }).catch(() => {
+      doCopyFallback();
+      showToast(`✓ انسخ${label ? ' ' + label : ''}`, false);
+    });
+  }else{
+    doCopyFallback();
+    showToast(`✓ انسخ${label ? ' ' + label : ''}`, false);
+  }
+}
+
+function copyTaskField(id, field){
+  const t = tasks.find(x => x.id === id);
+  if(!t) return;
+  const map = {
+    title: ['اسم المهمة', t.title],
+    clientName: ['اسم العميل', t.clientName],
+    clientPhone: ['رقم الهاتف', t.clientPhone],
+    clientAddress: ['العنوان', t.clientAddress],
+    details: ['الملاحظات', t.details]
+  };
+  const [label, value] = map[field] || [null, null];
+  copyText(value, label);
 }
 
 // ---------- toast ----------
@@ -562,6 +872,52 @@ function requestNotifPermission(){
 }
 
 // ---------- rendering ----------
+let currentSlideIndex = 0;
+let sliderSwipeInitialized = false;
+
+// Groups all tasks by client name. Tasks with no client name go into one
+// shared "مهام عامة" group, always shown first.
+function buildClientGroups(){
+  const groups = [];
+  const byName = new Map();
+
+  const generalGroup = { key: '__general__', clientName: null, clientPhone: null, clientAddress: null, photoData: null, tasks: [] };
+
+  for(const t of tasks){
+    if(!t.clientName){
+      generalGroup.tasks.push(t);
+      continue;
+    }
+    if(!byName.has(t.clientName)){
+      byName.set(t.clientName, {
+        key: t.clientName,
+        clientName: t.clientName,
+        clientPhone: t.clientPhone,
+        clientAddress: t.clientAddress,
+        photoData: t.photoData,
+        tasks: []
+      });
+    }
+    const g = byName.get(t.clientName);
+    // Keep the header populated even if an earlier task for this client was missing a field
+    if(!g.clientPhone && t.clientPhone) g.clientPhone = t.clientPhone;
+    if(!g.clientAddress && t.clientAddress) g.clientAddress = t.clientAddress;
+    if(!g.photoData && t.photoData) g.photoData = t.photoData;
+    g.tasks.push(t);
+  }
+
+  if(generalGroup.tasks.length > 0) groups.push(generalGroup);
+  groups.push(...byName.values());
+  return groups;
+}
+
+function findGroupIndexForTask(taskId, groups){
+  for(let i = 0; i < groups.length; i++){
+    if(groups[i].tasks.some(t => t.id === taskId)) return i;
+  }
+  return -1;
+}
+
 function fmtRemaining(ms){
   if(ms <= 0) return 'حان الوقت الحين';
   const totalMin = Math.ceil(ms/60000);
@@ -571,41 +927,150 @@ function fmtRemaining(ms){
   return m>0 ? `باقي ${h} ساعة و${m} دقيقة` : `باقي ${h} ساعة`;
 }
 
-function renderTasks(){
-  const list = document.getElementById('taskList');
-  if(tasks.length === 0){
-    list.innerHTML = '<div class="empty">ما عندك مهام بعد. ضيف وحدة من الأعلى.</div>';
-    return;
-  }
-  const now = Date.now();
-  list.innerHTML = tasks.map(t => {
-    const remaining = t.nextDue - now;
-    const isDue = remaining <= 0;
-    const avatar = t.photoData
-      ? `<img class="task-avatar" src="${t.photoData}">`
-      : `<div class="task-avatar placeholder">👤</div>`;
-    const clientLine = t.clientName ? `<div class="task-client">${escapeHtml(t.clientName)}</div>` : '';
-    const phoneLine = t.clientPhone
-      ? `<a class="task-contact" href="tel:${encodeURIComponent(t.clientPhone)}">📞 ${escapeHtml(t.clientPhone)}</a>`
-      : '';
-    const notesLine = t.details ? `<div class="task-notes">${escapeHtml(t.details)}</div>` : '';
-    return `
-      <div class="task ${isDue ? 'due' : ''}">
-        ${avatar}
-        <div class="task-main">
-          <div class="task-title">${escapeHtml(t.title)}</div>
-          ${clientLine}
-          ${phoneLine}
-          ${notesLine}
-          <div class="task-meta">${isDue ? '🔴 حان وقتها' : fmtRemaining(remaining)} — يومياً الساعة ${t.timeLabel}</div>
-        </div>
-        <div class="task-actions">
+function renderTaskRow(t, now){
+  const remaining = t.nextDue - now;
+  const isDue = remaining <= 0;
+  const notesLine = t.details
+    ? `<div class="task-notes">${escapeHtml(t.details)}<button type="button" class="copy-btn" onclick="copyTaskField('${t.id}','details')" title="نسخ">📋</button></div>`
+    : '';
+  const alarmLine = isAndroidDevice
+    ? `<a class="alarm-link" href="${buildAlarmIntentHref(t)}">⏰ أضف كمنبه بالموبايل</a>`
+    : `<div class="alarm-note">⏰ الإضافة التلقائية للمنبه متوفرة بس بأندرويد — بالآيفون لازم تضيفه يدوياً بتطبيق الساعة</div>`;
+
+  return `
+    <div class="ct-row ${isDue ? 'due' : ''}">
+      <div class="ct-row-top">
+        <div class="ct-title">${escapeHtml(t.title)}<button type="button" class="copy-btn" onclick="copyTaskField('${t.id}','title')" title="نسخ">📋</button></div>
+        <div class="ct-actions">
           <div class="icon-btn done" onclick="markDone('${t.id}')" title="تم">✓</div>
           <div class="icon-btn del" onclick="deleteTask('${t.id}')" title="حذف">✕</div>
         </div>
       </div>
-    `;
+      ${notesLine}
+      <div class="task-meta">${isDue ? '🔴 حان وقتها' : fmtRemaining(remaining)} — يومياً الساعة ${t.timeLabel}</div>
+      ${alarmLine}
+    </div>
+  `;
+}
+
+function renderClientSlide(group, now){
+  const anyDue = group.tasks.some(t => t.nextDue - now <= 0);
+  const avatar = group.photoData
+    ? `<img class="client-card-avatar" src="${group.photoData}" onclick="openImagePreview('${group.photoData}')">`
+    : `<div class="client-card-avatar placeholder">👤</div>`;
+
+  const nameHtml = group.clientName
+    ? `${escapeHtml(group.clientName)}<button type="button" class="copy-btn" onclick="copyText('${escapeHtml(group.clientName).replace(/'/g, "\\'")}','اسم العميل')" title="نسخ">📋</button>`
+    : `مهام عامة`;
+
+  const phoneChip = group.clientPhone
+    ? `<span><a class="task-contact" href="tel:${encodeURIComponent(group.clientPhone)}" dir="ltr" style="text-align:right; display:inline-block;">📞 ${escapeHtml(group.clientPhone)}</a><button type="button" class="copy-btn" onclick="copyText('${escapeHtml(group.clientPhone)}','رقم الهاتف')" title="نسخ">📋</button></span>`
+    : '';
+  const addressChip = group.clientAddress
+    ? `<span><a class="task-contact" href="https://maps.google.com/?q=${encodeURIComponent(group.clientAddress)}" target="_blank" rel="noopener">📍 ${escapeHtml(group.clientAddress)}</a><button type="button" class="copy-btn" onclick="copyText('${escapeHtml(group.clientAddress)}','العنوان')" title="نسخ">📋</button></span>`
+    : '';
+
+  const rowsHtml = group.tasks
+    .slice()
+    .sort((a, b) => a.nextDue - b.nextDue)
+    .map(t => renderTaskRow(t, now))
+    .join('');
+
+  return `
+    <div class="client-slide">
+      <div class="client-card ${anyDue ? 'due' : ''}">
+        <div class="client-card-head">
+          ${avatar}
+          <div>
+            <div class="client-card-name ${group.clientName ? '' : 'no-client'}">${nameHtml}</div>
+            <div class="client-card-contacts">${phoneChip}${addressChip}</div>
+          </div>
+        </div>
+        <div class="client-task-count">${group.tasks.length} مهمة</div>
+        ${rowsHtml}
+      </div>
+    </div>
+  `;
+}
+
+function renderTasks(){
+  const track = document.getElementById('clientSlideTrack');
+  const dotsWrap = document.getElementById('clientDots');
+  const prevBtn = document.getElementById('prevClientBtn');
+  const nextBtn = document.getElementById('nextClientBtn');
+
+  if(tasks.length === 0){
+    track.innerHTML = '<div class="client-slide"><div class="empty">لا توجد مهام. ضيف وحدة من فوق.</div></div>';
+    dotsWrap.innerHTML = '';
+    prevBtn.disabled = true;
+    nextBtn.disabled = true;
+    return;
+  }
+
+  const now = Date.now();
+  const groups = buildClientGroups();
+
+  if(currentSlideIndex >= groups.length) currentSlideIndex = groups.length - 1;
+  if(currentSlideIndex < 0) currentSlideIndex = 0;
+
+  track.innerHTML = groups.map(g => renderClientSlide(g, now)).join('');
+  track.style.transform = `translateX(-${currentSlideIndex * 100}%)`;
+
+  dotsWrap.innerHTML = groups.map((g, i) => {
+    const due = g.tasks.some(t => t.nextDue - now <= 0);
+    const cls = ['client-dot'];
+    if(i === currentSlideIndex) cls.push('active');
+    if(due) cls.push('has-due');
+    return `<button type="button" class="${cls.join(' ')}" onclick="goToSlide(${i})" title="${g.clientName ? escapeHtml(g.clientName) : 'مهام عامة'}"></button>`;
   }).join('');
+
+  prevBtn.disabled = groups.length <= 1;
+  nextBtn.disabled = groups.length <= 1;
+
+  initSliderSwipe();
+}
+
+function goToSlide(i){
+  currentSlideIndex = i;
+  renderTasks();
+}
+
+function initSliderSwipe(){
+  if(sliderSwipeInitialized) return;
+  sliderSwipeInitialized = true;
+
+  const slider = document.getElementById('clientSlider');
+  document.getElementById('prevClientBtn').addEventListener('click', () => {
+    const groups = buildClientGroups();
+    currentSlideIndex = (currentSlideIndex - 1 + groups.length) % groups.length;
+    renderTasks();
+  });
+  document.getElementById('nextClientBtn').addEventListener('click', () => {
+    const groups = buildClientGroups();
+    currentSlideIndex = (currentSlideIndex + 1) % groups.length;
+    renderTasks();
+  });
+
+  let touchStartX = null;
+  slider.addEventListener('touchstart', (e) => {
+    touchStartX = e.touches[0].clientX;
+  }, { passive: true });
+  slider.addEventListener('touchend', (e) => {
+    if(touchStartX === null) return;
+    const deltaX = e.changedTouches[0].clientX - touchStartX;
+    touchStartX = null;
+    const threshold = 40;
+    if(Math.abs(deltaX) < threshold) return;
+    const groups = buildClientGroups();
+    if(groups.length <= 1) return;
+    // slider-wrap is forced dir:ltr, so swipe-left (negative delta) = next slide
+    if(deltaX < 0){
+      currentSlideIndex = (currentSlideIndex + 1) % groups.length;
+    }else{
+      currentSlideIndex = (currentSlideIndex - 1 + groups.length) % groups.length;
+    }
+    renderTasks();
+  });
 }
 
 function escapeHtml(s){
@@ -655,6 +1120,7 @@ document.getElementById('taskForm').addEventListener('submit', async (e) => {
   const title = document.getElementById('taskTitle').value.trim();
   const clientName = document.getElementById('clientName').value.trim();
   const clientPhone = document.getElementById('clientPhone').value.trim();
+  const clientAddress = document.getElementById('clientAddress').value.trim();
   const details = document.getElementById('taskDetails').value.trim();
   const hour12 = parseInt(document.getElementById('timeHour').value, 10);
   const minute = parseInt(document.getElementById('timeMinute').value, 10);
@@ -666,6 +1132,7 @@ document.getElementById('taskForm').addEventListener('submit', async (e) => {
     title,
     clientName: clientName || null,
     clientPhone: clientPhone || null,
+    clientAddress: clientAddress || null,
     details: details || null,
     photoData: currentPhotoData,
     hour12,
@@ -678,6 +1145,7 @@ document.getElementById('taskForm').addEventListener('submit', async (e) => {
   document.getElementById('taskTitle').value = '';
   document.getElementById('clientName').value = '';
   document.getElementById('clientPhone').value = '';
+  document.getElementById('clientAddress').value = '';
   document.getElementById('taskDetails').value = '';
   clearPhoto();
   await saveTasks();
@@ -712,25 +1180,101 @@ function testAlertNow(){
 }
 
 // ---------- alert / sound / vibration ----------
-function beep(){
+let alarmCompressor = null;
+
+function getAlarmOutput(){
+  if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  if(audioCtx.state === 'suspended') audioCtx.resume();
+  if(!alarmCompressor){
+    // Compressor pushes the signal as loud as possible while preventing distortion/clipping —
+    // this is the maximum volume the Web Audio API can safely output
+    alarmCompressor = audioCtx.createDynamicsCompressor();
+    alarmCompressor.threshold.value = -12;
+    alarmCompressor.knee.value = 6;
+    alarmCompressor.ratio.value = 14;
+    alarmCompressor.attack.value = 0.002;
+    alarmCompressor.release.value = 0.15;
+    alarmCompressor.connect(audioCtx.destination);
+  }
+  return alarmCompressor;
+}
+
+function playTone(freq, duration){
   try{
-    if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    if(audioCtx.state === 'suspended') audioCtx.resume();
+    const output = getAlarmOutput();
+
+    // Layer a harsh square wave under the main sine tone — piercing, siren-like,
+    // and louder-perceived than a plain sine beep at the same volume
     const osc = audioCtx.createOscillator();
     const gain = audioCtx.createGain();
-    osc.type = 'sine';
-    osc.frequency.value = 880;
+    osc.type = 'square';
+    osc.frequency.value = freq;
     gain.gain.setValueAtTime(0.0001, audioCtx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.3, audioCtx.currentTime + 0.02);
-    gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.5);
-    osc.connect(gain).connect(audioCtx.destination);
+    gain.gain.exponentialRampToValueAtTime(0.85, audioCtx.currentTime + 0.015);
+    gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+    osc.connect(gain).connect(output);
     osc.start();
-    osc.stop(audioCtx.currentTime + 0.5);
+    osc.stop(audioCtx.currentTime + duration);
+
+    const osc2 = audioCtx.createOscillator();
+    const gain2 = audioCtx.createGain();
+    osc2.type = 'sine';
+    osc2.frequency.value = freq * 2;
+    gain2.gain.setValueAtTime(0.0001, audioCtx.currentTime);
+    gain2.gain.exponentialRampToValueAtTime(0.35, audioCtx.currentTime + 0.015);
+    gain2.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+    osc2.connect(gain2).connect(output);
+    osc2.start();
+    osc2.stop(audioCtx.currentTime + duration);
   }catch(e){}
 }
 
-function vibrate(){
-  if(navigator.vibrate) navigator.vibrate([300,150,300,150,300]);
+// Alternating two-tone siren, like a real alarm ring — keeps playing until stopped
+function startAlarmSound(){
+  stopAlarmSound();
+  ringToneHigh = true;
+  playTone(880, 0.35);
+  ringTimer = setInterval(() => {
+    playTone(ringToneHigh ? 950 : 700, 0.35);
+    ringToneHigh = !ringToneHigh;
+  }, 380);
+}
+
+function stopAlarmSound(){
+  if(ringTimer){ clearInterval(ringTimer); ringTimer = null; }
+}
+
+// Repeating strong vibration pattern — keeps buzzing until stopped
+function startVibration(){
+  stopVibration();
+  if(navigator.vibrate){
+    navigator.vibrate([500, 200, 500, 200, 500]);
+    vibrateTimer = setInterval(() => {
+      navigator.vibrate([500, 200, 500, 200, 500]);
+    }, 1800);
+  }
+}
+
+function stopVibration(){
+  if(vibrateTimer){ clearInterval(vibrateTimer); vibrateTimer = null; }
+  if(navigator.vibrate) navigator.vibrate(0);
+}
+
+// Wake Lock keeps the screen from sleeping while an alert is ringing,
+// so the sound/vibration/notification actually go through reliably
+async function requestWakeLock(){
+  try{
+    if('wakeLock' in navigator){
+      wakeLock = await navigator.wakeLock.request('screen');
+    }
+  }catch(e){ /* not supported or denied — alert still works, screen may just sleep */ }
+}
+
+function releaseWakeLock(){
+  if(wakeLock){
+    wakeLock.release().catch(() => {});
+    wakeLock = null;
+  }
 }
 
 function triggerAlert(task){
@@ -743,10 +1287,9 @@ function triggerAlert(task){
   document.getElementById('overlaySubtitle').textContent = sub;
   document.getElementById('overlay').classList.add('show');
 
-  beep();
-  vibrate();
-  if(alarmInterval) clearInterval(alarmInterval);
-  alarmInterval = setInterval(() => { beep(); vibrate(); }, 4000);
+  startAlarmSound();
+  startVibration();
+  requestWakeLock();
 
   if('Notification' in window && Notification.permission === 'granted'){
     try{
@@ -755,12 +1298,10 @@ function triggerAlert(task){
   }
 }
 
-function stopAlarmSound(){
-  if(alarmInterval){ clearInterval(alarmInterval); alarmInterval = null; }
-}
-
 async function dismissAlert(){
   stopAlarmSound();
+  stopVibration();
+  releaseWakeLock();
   document.getElementById('overlay').classList.remove('show');
   if(activeAlertTask){
     const t = tasks.find(x => x.id === activeAlertTask.id);
@@ -773,6 +1314,8 @@ async function dismissAlert(){
 
 async function snoozeAlert(){
   stopAlarmSound();
+  stopVibration();
+  releaseWakeLock();
   document.getElementById('overlay').classList.remove('show');
   if(activeAlertTask){
     const t = tasks.find(x => x.id === activeAlertTask.id);
@@ -788,6 +1331,9 @@ function checkDueTasks(){
   const now = Date.now();
   const due = tasks.find(t => t.nextDue <= now);
   if(due && !document.getElementById('overlay').classList.contains('show')){
+    const groups = buildClientGroups();
+    const idx = findGroupIndexForTask(due.id, groups);
+    if(idx !== -1) currentSlideIndex = idx;
     triggerAlert(due);
   }
   renderTasks();
@@ -797,6 +1343,28 @@ setInterval(checkDueTasks, 1000);
 populateTimeDropdowns();
 loadTasks();
 updateNotifStatusUI();
+
+// Mobile browsers require a real tap before audio is allowed to play.
+// This one-time listener "unlocks" sound the moment the user touches the page,
+// so the alarm sound is guaranteed to work later when it fires automatically.
+function unlockAudioOnce(){
+  try{
+    if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if(audioCtx.state === 'suspended') audioCtx.resume();
+  }catch(e){}
+  document.removeEventListener('touchstart', unlockAudioOnce);
+  document.removeEventListener('click', unlockAudioOnce);
+}
+document.addEventListener('touchstart', unlockAudioOnce, { once: true });
+document.addEventListener('click', unlockAudioOnce, { once: true });
+
+// If the screen was locked/tab hidden during an active alert and the user comes back,
+// re-acquire the wake lock so the alert keeps behaving correctly
+document.addEventListener('visibilitychange', () => {
+  if(document.visibilityState === 'visible' && document.getElementById('overlay').classList.contains('show')){
+    requestWakeLock();
+  }
+});
 </script>
 
 </body>
