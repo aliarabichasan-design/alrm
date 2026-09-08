@@ -592,13 +592,6 @@
     <div class="status-pill" id="notifStatus" onclick="requestNotifPermission()">تفعيل التنبيه 🔔</div>
   </header>
 
-  <div class="notice" id="notice">
-    خلي هاي الصفحة مفتوحة حتى يوصلك التنبيه. إذا سكرتها، ما راح توصلك تنبيهات.
-    <br><br>نصيحة: سوي <b>"إضافة إلى الشاشة الرئيسية"</b> من المتصفح حتى تصير مثل تطبيق عادي.
-    <br><br>⚠️ ملاحظة: إذا موبايلك بوضع الصامت، صوت المتصفح ما يطلع — هاي قيد من نظام الموبايل نفسه على كل المواقع. للمهام المهمة جداً، أنصحك تسوي وياها منبّه Alarm أصلي بالموبايل كضمان إضافي.
-    <br><span id="storageInfo">جارِ التحقق من التخزين...</span>
-  </div>
-
   <button type="button" class="test-btn" onclick="testAlertNow()">🔔 جرّب التنبيه الحين</button>
 
   <form id="taskForm">
@@ -819,10 +812,10 @@ async function loadTasks(){
   try{
     const raw = localStorage.getItem(STORAGE_KEY);
     tasks = raw ? JSON.parse(raw) : [];
-    info.textContent = `✅ التخزين يشتغل — محمّل ${tasks.length} مهمة من الحفظ السابق.`;
+    if(info) info.textContent = `✅ التخزين يشتغل — محمّل ${tasks.length} مهمة من الحفظ السابق.`;
   }catch(e){
     tasks = [];
-    info.textContent = `❌ المتصفح يمنع التخزين هنا (تصفح خاص أو إعدادات صارمة) — المهام ما راح تنحفظ.`;
+    if(info) info.textContent = `❌ المتصفح يمنع التخزين هنا (تصفح خاص أو إعدادات صارمة) — المهام ما راح تنحفظ.`;
   }
   renderTasks();
 }
