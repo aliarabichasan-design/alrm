@@ -615,7 +615,7 @@
       <input type="text" id="clientName" placeholder="اسم العميل">
     </div>
     <div class="row">
-      <input type="text" id="clientPhone" placeholder="رقم الهاتف" inputmode="tel" dir="ltr" style="text-align:left;">
+      <input type="text" id="clientPhone" placeholder="رقم الهاتف (للواتساب)" inputmode="tel" dir="ltr" style="text-align:left;">
     </div>
     <div class="row">
       <input type="text" id="clientAddress" placeholder="العنوان">
@@ -682,6 +682,18 @@ function buildAlarmIntentHref(t){
          `i.android.intent.extra.alarm.HOUR=${hour24};` +
          `i.android.intent.extra.alarm.MINUTES=${t.minute};` +
          `S.android.intent.extra.alarm.MESSAGE=${msg};end`;
+}
+
+// Turns a phone number into a wa.me WhatsApp chat link.
+// If the number starts with a local "0" (common in Iraq: 07xxxxxxxxx),
+// it's assumed local and the 0 is replaced with the Iraq country code 964.
+// If the number already looks international (starts with + or a country code), it's used as-is.
+function buildWhatsAppHref(phone){
+  let digits = phone.replace(/[^\d]/g, '');
+  if(digits.startsWith('0')){
+    digits = '964' + digits.slice(1);
+  }
+  return `https://wa.me/${digits}`;
 }
 let activeAlertTask = null;
 let audioCtx = null;
@@ -958,7 +970,7 @@ function renderClientSlide(group, now){
     : `مهام عامة`;
 
   const phoneChip = group.clientPhone
-    ? `<span><a class="task-contact" href="tel:${encodeURIComponent(group.clientPhone)}" dir="ltr" style="text-align:right; display:inline-block;">📞 ${escapeHtml(group.clientPhone)}</a><button type="button" class="copy-btn" onclick="copyText('${escapeHtml(group.clientPhone)}','رقم الهاتف')" title="نسخ">📋</button></span>`
+    ? `<span><a class="task-contact" href="${buildWhatsAppHref(group.clientPhone)}" target="_blank" rel="noopener" dir="ltr" style="text-align:right; display:inline-block;">🟢 ${escapeHtml(group.clientPhone)}</a><button type="button" class="copy-btn" onclick="copyText('${escapeHtml(group.clientPhone)}','رقم الهاتف')" title="نسخ">📋</button></span>`
     : '';
   const addressChip = group.clientAddress
     ? `<span><a class="task-contact" href="https://maps.google.com/?q=${encodeURIComponent(group.clientAddress)}" target="_blank" rel="noopener">📍 ${escapeHtml(group.clientAddress)}</a><button type="button" class="copy-btn" onclick="copyText('${escapeHtml(group.clientAddress)}','العنوان')" title="نسخ">📋</button></span>`
