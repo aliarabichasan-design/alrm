@@ -8,16 +8,22 @@
   @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&family=IBM+Plex+Mono:wght@500&display=swap');
 
   :root{
-    --bg: #14181F;
-    --bg-soft: #1C222C;
-    --card: #232A35;
-    --line: #323B49;
-    --ink: #ECEAE2;
-    --ink-dim: #9AA3B0;
-    --amber: #F0A63A;
-    --amber-dim: #6B5326;
-    --teal: #3E8A78;
-    --danger: #E2603A;
+    --bg: #F2F4F8;
+    --bg-soft: #FFFFFF;
+    --card: #FFFFFF;
+    --line: #E3E7EF;
+    --ink: #15213C;
+    --ink-dim: #6B7280;
+    --amber: #C9A227;
+    --amber-dim: #FBF3DC;
+    --teal: #2F8558;
+    --danger: #C0392B;
+    --navy: #131E37;
+    --gold: #C9A227;
+    --gold-soft: #FBF3DC;
+    --green-bg: #E8F6EC;
+    --pill-bg: #EEF1F6;
+    --danger-bg: #FBEAE7;
   }
 
   *{ box-sizing: border-box; }
@@ -185,9 +191,9 @@
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    background: rgba(20,24,31,0.75);
-    border: 1px solid var(--line);
-    color: var(--ink);
+    background: rgba(19,30,55,0.8);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: #fff;
     width: 40px; height:40px;
     border-radius: 50%;
     font-size: 22px;
@@ -275,7 +281,132 @@
     padding: 12px 14px;
     margin-bottom: 10px;
   }
-  .ct-row.due{ border-color: var(--danger); background: linear-gradient(135deg, #2A1B18, var(--bg-soft)); }
+  .ct-row.due{ border-color: var(--danger); background: linear-gradient(135deg, #FBEAE7, var(--bg-soft)); }
+
+  /* ---------- boarding-pass style ticket card ---------- */
+  .ticket-head{
+    display:flex;
+    align-items:center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .ticket-flight-pill{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    background: var(--pill-bg);
+    border: 1px solid var(--line);
+    border-radius: 30px;
+    padding: 8px 16px;
+    font-weight: 800;
+    font-size: 18px;
+    color: var(--ink);
+  }
+  .ticket-status{
+    display:inline-flex;
+    align-items:center;
+    gap:4px;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-weight: 800;
+    font-size: 14px;
+    white-space:nowrap;
+  }
+  .ticket-status.ok{ background: var(--green-bg); color: var(--teal); }
+  .ticket-status.due{ background: var(--danger-bg); color: var(--danger); }
+
+  .ticket-main{
+    display:flex;
+    align-items:center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .ticket-title{ font-size: 23px; font-weight: 900; color: var(--ink); line-height:1.3; }
+  .ticket-time-circle{
+    width: 64px; height:64px;
+    flex-shrink:0;
+    border-radius: 50%;
+    border: 1px solid var(--line);
+    background: var(--pill-bg);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    font-family:'IBM Plex Mono', monospace;
+    font-weight: 800;
+    font-size: 12.5px;
+    color: var(--ink);
+    line-height:1.35;
+    text-align:center;
+  }
+
+  .ticket-date-pill{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    border: 1px solid var(--gold);
+    background: var(--gold-soft);
+    color: var(--ink);
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-family:'IBM Plex Mono', monospace;
+    font-weight: 800;
+    font-size: 15px;
+    margin-bottom: 12px;
+  }
+
+  .ticket-info-pill{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    background: var(--pill-bg);
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 8px;
+    flex-wrap:wrap;
+  }
+
+  .ticket-footer{
+    display:flex;
+    align-items:center;
+    justify-content: space-between;
+    margin: 10px 0 14px;
+    padding-top: 12px;
+    border-top: 1px dashed var(--line);
+  }
+  .ticket-tag{
+    border: 1px solid var(--gold);
+    color: var(--ink);
+    background: var(--gold-soft);
+    font-weight: 800;
+    font-size: 13.5px;
+    padding: 5px 12px;
+    border-radius: 16px;
+  }
+  .ticket-tag.simple{ color: var(--ink-dim); border:none; background:none; font-weight:700; font-size:15px; }
+
+  .calendar-btn{
+    width:100%;
+    background: var(--navy);
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    border-radius: 12px;
+    padding: 14px;
+    font-family:'Tajawal', sans-serif;
+    font-weight: 800;
+    font-size: 17px;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+  }
+  .calendar-btn:active{ transform: scale(0.98); }
   .ct-row-top{
     display:flex;
     align-items:flex-start;
@@ -566,8 +697,8 @@
     0%,100%{ transform: scale(1); }
     50%{ transform: scale(1.08); }
   }
-  #overlay h2{ font-size: 34px; margin: 0 0 8px; }
-  #overlay p{ color: var(--ink); font-size: 21px; margin: 0 0 26px; }
+  #overlay h2{ font-size: 34px; margin: 0 0 8px; color:#fff; }
+  #overlay p{ color: #D8DCE6; font-size: 21px; margin: 0 0 26px; }
   #overlay .btns{ display:flex; gap:10px; }
   #overlay button{
     border:none; border-radius: 10px;
@@ -667,21 +798,70 @@
 
 <script>
 let tasks = [];
-const isAndroidDevice = /Android/i.test(navigator.userAgent);
 
-// Builds a link that, on Android + Chrome, opens the phone's real Alarm/Clock app
-// with the time and label pre-filled — the user just taps Save.
-// This uses Android's own public SET_ALARM intent (the same one the Google Assistant
-// and other apps use); it is NOT possible on iOS/Safari, since Apple has no equivalent
-// public API for websites to reach the native Clock app.
-function buildAlarmIntentHref(t){
-  let hour24 = t.hour12 % 12;
-  if(t.period === 'م') hour24 += 12;
-  const msg = encodeURIComponent(t.title);
-  return `intent:#Intent;action=android.intent.action.SET_ALARM;` +
-         `i.android.intent.extra.alarm.HOUR=${hour24};` +
-         `i.android.intent.extra.alarm.MINUTES=${t.minute};` +
-         `S.android.intent.extra.alarm.MESSAGE=${msg};end`;
+const MONTH_ABBR = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+function formatTicketDate(ts){
+  const d = new Date(ts);
+  return `${d.getDate()} ${MONTH_ABBR[d.getMonth()]} ${d.getFullYear()}`;
+}
+
+// Pads a calendar date component to 2 digits for the .ics DATE-TIME format (YYYYMMDDTHHMMSS)
+function icsPad(n){ return String(n).padStart(2, '0'); }
+function icsLocalStamp(d){
+  return `${d.getFullYear()}${icsPad(d.getMonth()+1)}${icsPad(d.getDate())}T${icsPad(d.getHours())}${icsPad(d.getMinutes())}00`;
+}
+function icsUTCStamp(d){
+  return `${d.getUTCFullYear()}${icsPad(d.getUTCMonth()+1)}${icsPad(d.getUTCDate())}T${icsPad(d.getUTCHours())}${icsPad(d.getUTCMinutes())}${icsPad(d.getUTCSeconds())}Z`;
+}
+function icsEscape(s){
+  return String(s || '').replace(/\\/g,'\\\\').replace(/;/g,'\\;').replace(/,/g,'\\,').replace(/\n/g,'\\n');
+}
+
+// Builds a standard .ics calendar file for a task, with a built-in alarm (VALARM) that fires
+// at the scheduled time, and a daily recurrence rule (RRULE) since tasks repeat every day.
+// Opening/tapping this file is the one universal, Apple-approved way for a website to create
+// a real entry — with an alert — in the phone's own Calendar app (unlike Reminders, which has
+// no such public path).
+function buildTaskICS(t){
+  const start = new Date(t.nextDue);
+  const end = new Date(start.getTime() + 30 * 60000);
+  const notesParts = [];
+  if(t.clientName) notesParts.push(t.clientName);
+  if(t.clientPhone) notesParts.push(t.clientPhone);
+  if(t.clientAddress) notesParts.push(t.clientAddress);
+  if(t.details) notesParts.push(t.details);
+
+  return [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//مذكر المهام//AR',
+    'CALSCALE:GREGORIAN',
+    'BEGIN:VEVENT',
+    `UID:${t.id}@mudhakkir-almaham`,
+    `DTSTAMP:${icsUTCStamp(new Date())}`,
+    `DTSTART:${icsLocalStamp(start)}`,
+    `DTEND:${icsLocalStamp(end)}`,
+    `SUMMARY:${icsEscape(t.title)}`,
+    notesParts.length ? `DESCRIPTION:${icsEscape(notesParts.join(' — '))}` : '',
+    'RRULE:FREQ=DAILY',
+    'BEGIN:VALARM',
+    'ACTION:DISPLAY',
+    `DESCRIPTION:${icsEscape(t.title)}`,
+    'TRIGGER:PT0M',
+    'END:VALARM',
+    'END:VEVENT',
+    'END:VCALENDAR'
+  ].filter(Boolean).join('\r\n');
+}
+
+function addTaskToCalendar(id){
+  const t = tasks.find(x => x.id === id);
+  if(!t) return;
+  const ics = buildTaskICS(t);
+  const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  window.location.href = url;
+  setTimeout(() => URL.revokeObjectURL(url), 15000);
 }
 
 // Turns a phone number into a wa.me WhatsApp chat link.
@@ -940,25 +1120,41 @@ function fmtRemaining(ms){
 function renderTaskRow(t, now){
   const remaining = t.nextDue - now;
   const isDue = remaining <= 0;
-  const notesLine = t.details
-    ? `<div class="task-notes">${escapeHtml(t.details)}<button type="button" class="copy-btn" onclick="copyTaskField('${t.id}','details')" title="نسخ">📋</button></div>`
+
+  const detailsLine = t.details
+    ? `<div class="ticket-info-pill">📝 <span>${escapeHtml(t.details)}</span><button type="button" class="copy-btn" onclick="copyTaskField('${t.id}','details')" title="نسخ">📋</button></div>`
     : '';
-  const alarmLine = isAndroidDevice
-    ? `<a class="alarm-link" href="${buildAlarmIntentHref(t)}">⏰ أضف كمنبه بالموبايل</a>`
-    : `<div class="alarm-note">⏰ الإضافة التلقائية للمنبه متوفرة بس بأندرويد — بالآيفون لازم تضيفه يدوياً بتطبيق الساعة</div>`;
+
+  const statusHtml = isDue
+    ? `<span class="ticket-status due">🔴 حان وقتها</span>`
+    : `<span class="ticket-status ok">✓ قادمة</span>`;
 
   return `
     <div class="ct-row ${isDue ? 'due' : ''}">
-      <div class="ct-row-top">
-        <div class="ct-title">${escapeHtml(t.title)}<button type="button" class="copy-btn" onclick="copyTaskField('${t.id}','title')" title="نسخ">📋</button></div>
-        <div class="ct-actions">
+      <div class="ticket-head">
+        <div class="ticket-flight-pill">🕐 ${t.timeLabel}</div>
+        <div style="display:flex; align-items:center; gap:8px;">
+          ${statusHtml}
           <div class="icon-btn done" onclick="markDone('${t.id}')" title="تم">✓</div>
           <div class="icon-btn del" onclick="deleteTask('${t.id}')" title="حذف">✕</div>
         </div>
       </div>
-      ${notesLine}
-      <div class="task-meta">${isDue ? '🔴 حان وقتها' : fmtRemaining(remaining)} — يومياً الساعة ${t.timeLabel}</div>
-      ${alarmLine}
+
+      <div class="ticket-main">
+        <div class="ticket-title">${escapeHtml(t.title)}<button type="button" class="copy-btn" onclick="copyTaskField('${t.id}','title')" title="نسخ">📋</button></div>
+        <div class="ticket-time-circle">${isDue ? 'الحين' : fmtRemaining(remaining)}</div>
+      </div>
+
+      <div class="ticket-date-pill">📅 <span dir="ltr">${formatTicketDate(t.nextDue)}</span></div>
+
+      ${detailsLine}
+
+      <div class="ticket-footer">
+        <span class="ticket-tag">🔁 يومياً</span>
+        <span class="ticket-tag simple">${t.timeLabel}</span>
+      </div>
+
+      <button type="button" class="calendar-btn" onclick="addTaskToCalendar('${t.id}')">🗓️+ أضف إلى التقويم (تنبيه)</button>
     </div>
   `;
 }
