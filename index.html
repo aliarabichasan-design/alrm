@@ -864,8 +864,6 @@ function addTaskToCalendar(id){
   // that reliably opens the native "Add to Calendar" sheet.
   const a = document.createElement('a');
   a.href = 'data:text/calendar;charset=utf-8,' + encodeURIComponent(ics);
-  a.setAttribute('target', '_blank');
-  a.setAttribute('rel', 'noopener');
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
