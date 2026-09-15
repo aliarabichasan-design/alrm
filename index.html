@@ -847,7 +847,7 @@ function buildTaskICS(t){
     'BEGIN:VALARM',
     'ACTION:DISPLAY',
     `DESCRIPTION:${icsEscape(t.title)}`,
-    'TRIGGER:PT0M',
+    'TRIGGER:-PT1M',
     'END:VALARM',
     'END:VEVENT',
     'END:VCALENDAR'
@@ -858,10 +858,17 @@ function addTaskToCalendar(id){
   const t = tasks.find(x => x.id === id);
   if(!t) return;
   const ics = buildTaskICS(t);
-  const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
-  const url = URL.createObjectURL(blob);
-  window.location.href = url;
-  setTimeout(() => URL.revokeObjectURL(url), 15000);
+  // iOS Safari is picky about how a page hands it a .ics file: navigating to a Blob URL via
+  // location.href is unreliable (especially when the page itself was opened as a local file).
+  // A real, user-triggered click on an <a> pointing at a text/calendar data: URI is the method
+  // that reliably opens the native "Add to Calendar" sheet.
+  const a = document.createElement('a');
+  a.href = 'data:text/calendar;charset=utf-8,' + encodeURIComponent(ics);
+  a.setAttribute('target', '_blank');
+  a.setAttribute('rel', 'noopener');
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
 }
 
 // Turns a phone number into a wa.me WhatsApp chat link.
