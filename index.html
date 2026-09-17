@@ -282,6 +282,37 @@
     margin-bottom: 10px;
   }
   .ct-row.due{ border-color: var(--danger); background: linear-gradient(135deg, #FBEAE7, var(--bg-soft)); }
+  .ct-row.task-done{ opacity: 0.72; }
+  .ct-row.task-done .ticket-time-circle{ background: var(--green-bg); border-color: var(--teal); color: var(--teal); font-size:24px; }
+
+  .status-toggle{
+    display:flex;
+    gap:8px;
+    margin-bottom: 12px;
+  }
+  .status-toggle-btn{
+    flex:1;
+    text-align:center;
+    padding: 9px 10px;
+    border-radius: 10px;
+    border: 1px solid var(--line);
+    background: var(--pill-bg);
+    color: var(--ink-dim);
+    font-family:'Tajawal', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    cursor:pointer;
+  }
+  .status-toggle-btn.active{
+    background: var(--gold-soft);
+    border-color: var(--gold);
+    color: var(--ink);
+  }
+  .status-toggle-btn.done.active{
+    background: var(--green-bg);
+    border-color: var(--teal);
+    color: var(--teal);
+  }
 
   /* ---------- boarding-pass style ticket card ---------- */
   .ticket-head{
@@ -434,6 +465,17 @@
     flex-shrink:0;
     overflow:hidden;
     position:relative;
+    outline: none;
+    caret-color: transparent;
+  }
+  .photo-picker:focus{
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px var(--gold-soft);
+  }
+  .photo-paste-hint{
+    font-size: 13px;
+    color: var(--ink-dim);
+    margin-bottom: 8px;
   }
   .photo-picker img{
     width:100%; height:100%; object-fit:cover;
@@ -727,7 +769,7 @@
 
   <form id="taskForm">
     <div class="row photo-row">
-      <div class="photo-picker" id="photoPicker">
+      <div class="photo-picker" id="photoPicker" contenteditable="true" tabindex="0" spellcheck="false" inputmode="none">
         <span id="photoPlaceholder">📷</span>
         <img id="photoPreview" style="display:none;">
         <input type="file" id="photoInput" accept="image/*">
@@ -735,6 +777,7 @@
       </div>
       <div>
         <div class="photo-picker-label">صورة العميل</div>
+        <div class="photo-paste-hint">📋 تكدر تنسخ صورة من أي مكان وتلصقها هنا</div>
         <button type="button" class="photo-clear" id="photoClearBtn" style="display:none;" onclick="clearPhoto()">إزالة الصورة</button>
       </div>
     </div>
@@ -917,8 +960,7 @@ function resizeImage(file){
   });
 }
 
-document.getElementById('photoInput').addEventListener('change', async (e) => {
-  const file = e.target.files[0];
+async function applyPhotoFile(file){
   if(!file) return;
   try{
     currentPhotoData = await resizeImage(file);
@@ -929,6 +971,55 @@ document.getElementById('photoInput').addEventListener('change', async (e) => {
     document.getElementById('zoomBtn').style.display = 'flex';
   }catch(err){
     console.error('تعذرت معالجة الصورة', err);
+  }
+}
+
+document.getElementById('photoInput').addEventListener('change', async (e) => {
+  await applyPhotoFile(e.target.files[0]);
+});
+
+// Lets the user paste an image straight into the photo box: copy any picture (from Photos,
+// WhatsApp, a screenshot, another site...) then paste it here — no need to go through the
+// file picker. Works with Ctrl/Cmd+V on desktop, and with the iOS "Paste" menu (the photo box
+// is a focusable/editable element so that menu option is offered at all).
+const photoPickerEl = document.getElementById('photoPicker');
+
+document.addEventListener('paste', async (e) => {
+  const isPhotoTarget = e.target === photoPickerEl || (e.target.closest && e.target.closest('#photoPicker'));
+  const dt = e.clipboardData;
+  if(!dt) return;
+  let imageFile = null;
+  for(const item of dt.items || []){
+    if(item.type && item.type.startsWith('image/')){
+      imageFile = item.getAsFile();
+      break;
+    }
+  }
+  if(imageFile){
+    e.preventDefault();
+    await applyPhotoFile(imageFile);
+    if(isPhotoTarget) photoPickerEl.blur();
+  }else if(isPhotoTarget){
+    // block plain text/other content from being typed into the photo box
+    e.preventDefault();
+  }
+});
+
+// The photo box isn't meant to hold typed text — block regular typing but still allow
+// the paste gesture above (and things like Tab for keyboard navigation).
+photoPickerEl.addEventListener('beforeinput', (e) => {
+  if(e.inputType !== 'insertFromPaste') e.preventDefault();
+});
+photoPickerEl.addEventListener('keydown', (e) => {
+  if(!['Tab','Enter',' '].includes(e.key) && !(e.metaKey || e.ctrlKey)){
+    e.preventDefault();
+  }
+});
+// Enter/Space on the focused photo box opens the normal file picker (keyboard accessibility).
+photoPickerEl.addEventListener('keyup', (e) => {
+  if(e.key === 'Enter' || e.key === ' '){
+    e.preventDefault();
+    document.getElementById('photoInput').click();
   }
 });
 
@@ -1130,36 +1221,51 @@ function renderTaskRow(t, now){
     ? `<div class="ticket-info-pill">📝 <span>${escapeHtml(t.details)}</span><button type="button" class="copy-btn" onclick="copyTaskField('${t.id}','details')" title="نسخ">📋</button></div>`
     : '';
 
-  const statusHtml = isDue
-    ? `<span class="ticket-status due">🔴 حان وقتها</span>`
-    : `<span class="ticket-status ok">✓ قادمة</span>`;
+  const status = t.status || 'progress';
+  const isDoneStatus = status === 'done';
+
+  const statusHtml = isDoneStatus
+    ? `<span class="ticket-status ok">✅ مكتملة</span>`
+    : (isDue
+        ? `<span class="ticket-status due">🔴 حان وقتها</span>`
+        : `<span class="ticket-status ok">✓ قادمة</span>`);
+
+  const statusToggle = `
+    <div class="status-toggle">
+      <button type="button" class="status-toggle-btn ${!isDoneStatus ? 'active' : ''}" onclick="setTaskStatus('${t.id}','progress')">🔄 قيد الإنجاز</button>
+      <button type="button" class="status-toggle-btn done ${isDoneStatus ? 'active' : ''}" onclick="setTaskStatus('${t.id}','done')">✅ خلصت</button>
+    </div>`;
+
+  const recurringFooter = isDoneStatus ? '' : `
+      <div class="ticket-footer">
+        <span class="ticket-tag">🔁 يومياً</span>
+        <span class="ticket-tag simple">${t.timeLabel}</span>
+      </div>
+
+      <button type="button" class="calendar-btn" onclick="addTaskToCalendar('${t.id}')">🗓️+ أضف إلى التقويم (تنبيه)</button>`;
 
   return `
-    <div class="ct-row ${isDue ? 'due' : ''}">
+    <div class="ct-row ${isDue && !isDoneStatus ? 'due' : ''} ${isDoneStatus ? 'task-done' : ''}">
       <div class="ticket-head">
         <div class="ticket-flight-pill">🕐 ${t.timeLabel}</div>
         <div style="display:flex; align-items:center; gap:8px;">
           ${statusHtml}
-          <div class="icon-btn done" onclick="markDone('${t.id}')" title="تم">✓</div>
+          <div class="icon-btn done" onclick="markDone('${t.id}')" title="تم لهذا اليوم (تأجيل ليوم باچر)">✓</div>
           <div class="icon-btn del" onclick="deleteTask('${t.id}')" title="حذف">✕</div>
         </div>
       </div>
 
       <div class="ticket-main">
         <div class="ticket-title">${escapeHtml(t.title)}<button type="button" class="copy-btn" onclick="copyTaskField('${t.id}','title')" title="نسخ">📋</button></div>
-        <div class="ticket-time-circle">${isDue ? 'الحين' : fmtRemaining(remaining)}</div>
+        <div class="ticket-time-circle">${isDoneStatus ? '✅' : (isDue ? 'الحين' : fmtRemaining(remaining))}</div>
       </div>
+
+      ${statusToggle}
 
       <div class="ticket-date-pill">📅 <span dir="ltr">${formatTicketDate(t.nextDue)}</span></div>
 
       ${detailsLine}
-
-      <div class="ticket-footer">
-        <span class="ticket-tag">🔁 يومياً</span>
-        <span class="ticket-tag simple">${t.timeLabel}</span>
-      </div>
-
-      <button type="button" class="calendar-btn" onclick="addTaskToCalendar('${t.id}')">🗓️+ أضف إلى التقويم (تنبيه)</button>
+      ${recurringFooter}
     </div>
   `;
 }
@@ -1355,7 +1461,8 @@ document.getElementById('taskForm').addEventListener('submit', async (e) => {
     minute,
     period,
     timeLabel: formatTimeLabel(hour12, minute, period),
-    nextDue: nextOccurrence(hour12, minute, period)
+    nextDue: nextOccurrence(hour12, minute, period),
+    status: 'progress'
   });
 
   document.getElementById('taskTitle').value = '';
@@ -1367,6 +1474,19 @@ document.getElementById('taskForm').addEventListener('submit', async (e) => {
   await saveTasks();
   renderTasks();
 });
+
+async function setTaskStatus(id, status){
+  const t = tasks.find(x => x.id === id);
+  if(!t) return;
+  t.status = status;
+  // coming back to "in progress" should resume the daily reminder from the next real occurrence,
+  // not from whatever old nextDue was sitting there while it was marked done
+  if(status === 'progress'){
+    t.nextDue = nextOccurrence(t.hour12, t.minute, t.period);
+  }
+  await saveTasks();
+  renderTasks();
+}
 
 async function markDone(id){
   const t = tasks.find(x => x.id === id);
@@ -1545,7 +1665,7 @@ async function snoozeAlert(){
 // ---------- main loop ----------
 function checkDueTasks(){
   const now = Date.now();
-  const due = tasks.find(t => t.nextDue <= now);
+  const due = tasks.find(t => t.status !== 'done' && t.nextDue <= now);
   if(due && !document.getElementById('overlay').classList.contains('show')){
     const groups = buildClientGroups();
     const idx = findGroupIndexForTask(due.id, groups);
