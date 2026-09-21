@@ -1213,9 +1213,18 @@ function fmtRemaining(ms){
   return m>0 ? `باقي ${h} ساعة و${m} دقيقة` : `باقي ${h} ساعة`;
 }
 
+// Arabic-friendly day-count wording: 1 -> "يوم واحد", 2 -> "يومين", 3+ -> "N أيام"/"N يوم"
+function daysLabel(n){
+  if(n === 1) return 'يوم واحد';
+  if(n === 2) return 'يومين';
+  if(n >= 3 && n <= 10) return `${n} أيام`;
+  return `${n} يوم`;
+}
+
 function renderTaskRow(t, now){
   const remaining = t.nextDue - now;
   const isDue = remaining <= 0;
+  const daysOverdue = isDue ? Math.floor(-remaining / 86400000) : 0;
 
   const detailsLine = t.details
     ? `<div class="ticket-info-pill">📝 <span>${escapeHtml(t.details)}</span><button type="button" class="copy-btn" onclick="copyTaskField('${t.id}','details')" title="نسخ">📋</button></div>`
@@ -1227,7 +1236,9 @@ function renderTaskRow(t, now){
   const statusHtml = isDoneStatus
     ? `<span class="ticket-status ok">✅ مكتملة</span>`
     : (isDue
-        ? `<span class="ticket-status due">🔴 حان وقتها</span>`
+        ? (daysOverdue >= 1
+            ? `<span class="ticket-status due">🔴 متأخر ${daysLabel(daysOverdue)}</span>`
+            : `<span class="ticket-status due">🔴 حان وقتها</span>`)
         : `<span class="ticket-status ok">✓ قادمة</span>`);
 
   const statusToggle = `
@@ -1257,7 +1268,7 @@ function renderTaskRow(t, now){
 
       <div class="ticket-main">
         <div class="ticket-title">${escapeHtml(t.title)}<button type="button" class="copy-btn" onclick="copyTaskField('${t.id}','title')" title="نسخ">📋</button></div>
-        <div class="ticket-time-circle">${isDoneStatus ? '✅' : (isDue ? 'الحين' : fmtRemaining(remaining))}</div>
+        <div class="ticket-time-circle">${isDoneStatus ? '✅' : (isDue ? (daysOverdue >= 1 ? `متأخر<br>${daysLabel(daysOverdue)}` : 'الحين') : fmtRemaining(remaining))}</div>
       </div>
 
       ${statusToggle}
